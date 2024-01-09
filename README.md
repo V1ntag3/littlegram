@@ -125,3 +125,20 @@ Obtém o avatar do usuário.
 - **Response:** Retorna o avatar do usuário.
 
 ---
+
+
+### ENV EXEMPLE littlegram_server
+
+``` javascript
+
+SECRET_KEY="minhachavesecreta"
+
+EMAIL_HOST="marcos.vinicius.r.alencar@gmail.com"
+EMAIL_PORT="4444"
+EMAIL_HOST_USER="marocs"
+EMAIL_HOST_PASSWORD="marcos1302"
+
+BACK_END_URL="http://localhost:3333"
+FRONT_END_URL="http://localhost:3000"
+
+```
