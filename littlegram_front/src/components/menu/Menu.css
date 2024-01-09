@@ -88,7 +88,8 @@
 
 .LogoutMenu {
     font-weight: 600;
-    font-size: 16px;;
+    font-size: 16px;
+    ;
     display: flex;
     color: white;
     align-items: center;
@@ -123,7 +124,8 @@
     .Menu {
         display: none;
     }
-    .ItemMenuMobile{
+
+    .ItemMenuMobile {
         cursor: pointer;
     }
 }

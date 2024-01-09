@@ -91,18 +91,18 @@ function GerenciarFotos() {
   const uploadPhoto = () => {
     if (JSON.stringify(image) === JSON.stringify([])) {
       handleFileRequiredError();
-      return 
-    }else{
+      return
+    } else {
       const form = new FormData();
       for (const key in image) {
-  
+
         form.append('photos', image[key].fileReal);
-  
+
       }
       setProgress(25)
 
       axios.post(config.baseURL + '/photos/multiples', form, {
-        onUploadProgress: function(progressEvent) {
+        onUploadProgress: function (progressEvent) {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
           );
@@ -110,7 +110,7 @@ function GerenciarFotos() {
         },
         headers: { 'Content-Type': 'multipart/form-data', Authorization: 'Bearer ' + localStorage.getItem("token") }
       }).then((response) => {
-  
+
         if (response.status === 200) {
           handleModal();
           setImage([]);
@@ -132,7 +132,7 @@ function GerenciarFotos() {
       });
 
     }
- 
+
   };
 
   const delet = (path, photoId) => {
@@ -159,10 +159,10 @@ function GerenciarFotos() {
       for (const key in response.data) {
         response.data[key].size = bytesToMegabytes(response.data[key].size)
       }
-      
+
       setPhotos(response.data)
     }).catch((response) => {
-      if (response['response']['data']['message'] === ["No photos found for this user."]) {
+      if (response['response']['data']['message'] === "No photos found for this user.") {
         setPhotos([])
       }
     })
@@ -181,11 +181,11 @@ function GerenciarFotos() {
 
       setPhotos(photos.concat(response.data.photos));
 
-      if (offSetPhotos + 1 >= response.data.totalPages || response.data.photos === []) return
+      if (offSetPhotos + 1 >= response.data.totalPages || response.data.photos.length === 0) return
       setOffSetPhotos(offSetPhotos + 1);
       setIsFetchingPhotos(false);
     }).catch((error) => {
-      if( error.response.status === 401){
+      if (error.response.status === 401) {
         localStorage.removeItem('token')
         localStorage.removeItem('user_id')
         localStorage.removeItem('username')
@@ -236,8 +236,8 @@ function GerenciarFotos() {
 
       </div>
 
-      <div style={{display: progress > 0 ? 'flex' : 'none', zIndex:100000000}} className='TelaDeProgresso'>
-            <ProgressBar className='BarraProgresso' now={progress} label={`${progress}%`} />
+      <div style={{ display: progress > 0 ? 'flex' : 'none', zIndex: 100000000 }} className='TelaDeProgresso'>
+        <ProgressBar className='BarraProgresso' now={progress} label={`${progress}%`} />
       </div>
 
       {/* toasts */}
@@ -301,12 +301,12 @@ function GerenciarFotos() {
       <Modal id='ModalGerenciamentoFotos' show={openUpload} onHide={handleModal} >
         <Modal.Body style={{ backgroundColor: 'var(--color3)' }}>
           <h1 style={{ color: 'white', width: '100%', fontWeight: 500, textAlign: 'left' }}>Upload de Imagem</h1>
-          <div style={ image.length > 0 ? {display:'flex', flexDirection:'row', overflow:'auto'}: {} }>
-          {
-            image.length <= 0? <><img src={Search} /> <h1 style={{ color: 'white', fontSize: '18px', width: '100%', marginBottom: '5px', fontWeight: 400, textAlign: 'center' }}>Procure por uma imagem</h1></> : image.map((element, index) => { return (<img alt={index} key={index} src={element.file} style={{ width: 'auto', height: 350, margin:'auto 15px' }} accept='image/*' />)}) 
-          }
+          <div style={image.length > 0 ? { display: 'flex', flexDirection: 'row', overflow: 'auto' } : {}}>
+            {
+              image.length <= 0 ? <><img src={Search} /> <h1 style={{ color: 'white', fontSize: '18px', width: '100%', marginBottom: '5px', fontWeight: 400, textAlign: 'center' }}>Procure por uma imagem</h1></> : image.map((element, index) => { return (<img alt={index} key={index} src={element.file} style={{ width: 'auto', height: 350, margin: 'auto 15px' }} accept='image/*' />) })
+            }
           </div>
-       
+
           <div className='Upload'>
             <button className='ButtonModal' onClick={uploadPhoto}>Enviar</button>
             <label htmlFor='imageInput' className='ButtonInputImage' style={{ color: imageError ? '#FF2E2E' : 'white' }} >Adicionar Imagem</label>
@@ -353,7 +353,8 @@ function GerenciarFotos() {
           <h1 style={{ color: 'white', width: '100%', fontWeight: 500, textAlign: 'left' }}>Deletar Imagem</h1>
 
           <img src={Trash} style={{ width: '85%', margin: '0px auto', textAlign: 'center' }} />
-          <h1 style={{width:'100%',color: 'white', fontSize: '25px', width: '100%', marginBottom: '5px',
+          <h1 style={{
+            width: '100%', color: 'white', fontSize: '25px', width: '100%', marginBottom: '5px',
           }}>Deseja mesmo excluir permanentemente essa foto?</h1>
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: '20px' }}>
             <button className='ButtonModal' onClick={() => { delet(selectedExclude.path, selectedExclude.photoId) }}>Sim</button>

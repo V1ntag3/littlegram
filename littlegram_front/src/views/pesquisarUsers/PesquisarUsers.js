@@ -16,20 +16,20 @@ function PesquisarUsers() {
   const [offSetUsers, setOffSetUsers] = useState(0);
 
   const [users, setUsers] = useState([])
- 
+
 
   const navigate = useNavigate()
 
   function getUsers() {
     setIsFetchingUsers(true);
-    axios.get(config.baseURL + "/users?limit=10&offset=" , {
+    axios.get(config.baseURL + "/users?limit=10&offset=", {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
     }).then((response) => {
       setUsers(users.concat(response.data.users));
 
-      if (offSetUsers + 1 >= response.data.totalPages || response.data.users === []) return
+      if (offSetUsers + 1 >= response.data.totalPages || response.data.users.length === 0) return
 
       setOffSetUsers(offSetUsers + 1); // Usando a função de atualização do estado para obter o valor mais recente de 'page'
       setIsFetchingUsers(false);
@@ -66,12 +66,12 @@ function PesquisarUsers() {
         <Menu />
         <div className='PostDashBoard'>
 
-        {users.length > 0 && users.map((user, index) => (
-              <div key={index} onClick={() => {navigate('/profile/' + user.id)}} className='UserItem'>
-                  <div style={{background: returnBackground(user.avatar) }} className='AvatarUser'></div>
-                  <h3>@{user.username}</h3>
-              </div>
-            ))}
+          {users.length > 0 && users.map((user, index) => (
+            <div key={index} onClick={() => { navigate('/profile/' + user.id) }} className='UserItem'>
+              <div style={{ background: returnBackground(user.avatar) }} className='AvatarUser'></div>
+              <h3>@{user.username}</h3>
+            </div>
+          ))}
 
         </div>
       </div>

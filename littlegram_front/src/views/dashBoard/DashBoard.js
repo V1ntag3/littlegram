@@ -65,12 +65,12 @@ function DashBoard() {
       }
     }).then((response) => {
       setPosts(posts.concat(response.data.posts));
-      if (offSetPosts + 1 >= response.data.totalPages || response.data.posts === []) return
+      if (offSetPosts + 1 >= response.data.totalPages || response.data.posts.length === 0) return
 
       setOffSetPosts(offSetPosts + 1); // Usando a função de atualização do estado para obter o valor mais recente de 'page'
       setIsFetchingPosts(false);
     }).catch((error) => {
-      if(error.response.status === 401){
+      if (error.response.status === 401) {
         localStorage.removeItem('token')
         localStorage.removeItem('user_id')
         localStorage.removeItem('username')
@@ -87,16 +87,16 @@ function DashBoard() {
       }
     }).then((response) => {
       console.log(response.data.photos)
-      if (offSetPhotos + 1 > response.data.totalPages || response.data.photos === []) return
+      if (offSetPhotos + 1 > response.data.totalPages || response.data.photos.length === 0) return
 
       setOffSetPhotos(prevPage => prevPage + 1);
       setIsFetchingPhotos(false);
       setPhotos(photos.concat(response.data.photos));
     }).catch((error) => {
-      if (error['response']['data']['message'] === ["No photos found for this user."]) {
+      if (error['response']['data']['message'] === "No photos found for this user.") {
         setPhotos([])
       }
-      if(error.response.status === 401){
+      if (error.response.status === 401) {
         localStorage.removeItem('token')
         localStorage.removeItem('user_id')
         localStorage.removeItem('username')
@@ -178,7 +178,7 @@ function DashBoard() {
     }).then((response) => {
       console.log(response.data)
       if (response.status === 200) {
-        if (offsetComment + 1 > response.data.totalPages || response.data.comments === []) return
+        if (offsetComment + 1 > response.data.totalPages || response.data.comments.length === 0) return
 
         setOffsetComment(prevPage => prevPage + 1);
         setIsFetchingComments(false);
@@ -280,7 +280,7 @@ function DashBoard() {
       'novembro',
       'dezembro',
     ];
-    return datePost.getDate() + ' de ' + meses[datePost.getMonth()] + ' de ' + datePost.getFullYear() + ' às ' + datePost.getUTCHours()+ ':' + datePost.getUTCMinutes()+ ':'  + datePost.getUTCSeconds()
+    return datePost.getDate() + ' de ' + meses[datePost.getMonth()] + ' de ' + datePost.getFullYear() + ' às ' + datePost.getUTCHours() + ':' + datePost.getUTCMinutes() + ':' + datePost.getUTCSeconds()
   }
   const returnBackgroundImages = (url) => {
     var part1 = "url("
@@ -347,7 +347,7 @@ function DashBoard() {
                     getComments(post.id)
                   }}>ver os comentários</span>
 
-                <span style={{cursor:'auto'}} className='PostDescricaoLetra'>{returnData(post.createdAt)}</span>
+                  <span style={{ cursor: 'auto' }} className='PostDescricaoLetra'>{returnData(post.createdAt)}</span>
 
                 </div>
               </div>
@@ -370,7 +370,7 @@ function DashBoard() {
                 setSelectedImage(index)
                 setOpenNewPost(false)
                 setOpenFilter(true)
-              }} className='PhotoToPost' style={{ background: returnBackgroundImages( config.baseURL + "/files/photos/" + photo.path) }}>
+              }} className='PhotoToPost' style={{ background: returnBackgroundImages(config.baseURL + "/files/photos/" + photo.path) }}>
               </div>
             ))}
           </div>

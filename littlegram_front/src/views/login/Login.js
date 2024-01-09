@@ -7,7 +7,7 @@ import config from '../../config'
 import { isNoAuth } from '../validators';
 const instance = axios.create({
   baseURL: config.baseURL,
-  headers:{
+  headers: {
     'Access-Control-Allow-Origin': '*'
   }
 });
@@ -58,33 +58,33 @@ function Login() {
 
     if (senha !== "" && email !== "" && isEmail(email) && validarSenha(senha)) {
 
-   
+
       instance.post('/sessions', {
         email: email,
         password: senha
       })
-      .then(function (response) {
-        if(response.status === 200){
-          if(response.data['user']['confirmed'] === false){
-            setEsperandoConfirmError(true)
-          }else{
-            setEsperandoConfirmError(false)
-            setUserInvalid(false)
-            localStorage.setItem('username', response.data['user']['username'])
-            localStorage.setItem('avatar', response.data['user']['avatar'])
-            localStorage.setItem('token', response.data['token'])
-            localStorage.setItem('user_id', response.data['user']['id'])
+        .then(function (response) {
+          if (response.status === 200) {
+            if (response.data['user']['confirmed'] === false) {
+              setEsperandoConfirmError(true)
+            } else {
+              setEsperandoConfirmError(false)
+              setUserInvalid(false)
+              localStorage.setItem('username', response.data['user']['username'])
+              localStorage.setItem('avatar', response.data['user']['avatar'])
+              localStorage.setItem('token', response.data['token'])
+              localStorage.setItem('user_id', response.data['user']['id'])
 
-            navigate("/home")
+              navigate("/home")
+            }
+
           }
-          
-        }
-      })
-      .catch(function (error) {
-        if(error.response.data['message'] == "Email or password incorrect"){
-          setUserInvalid(true)
-        }
-      });
+        })
+        .catch(function (error) {
+          if (error.response.data['message'] == "Email or password incorrect") {
+            setUserInvalid(true)
+          }
+        });
     }
   }
 
@@ -110,12 +110,12 @@ function Login() {
             setSenha(event.target.value);
           }} />
 
-          <label className='LabelPadrao' style={{ color: userInvalid ? '#FF2E2E' : 'white', display:  userInvalid ? 'block' : 'none', margin: 'auto', marginBottom: 15 }} >email ou senha inválidos</label>
+          <label className='LabelPadrao' style={{ color: userInvalid ? '#FF2E2E' : 'white', display: userInvalid ? 'block' : 'none', margin: 'auto', marginBottom: 15 }} >email ou senha inválidos</label>
 
-          <label className='LabelPadrao' style={{ color: esperandoConfirmError ? '#FF2E2E' : 'white', display:  esperandoConfirmError ? 'block' : 'none', margin: 'auto', marginBottom: 15 }} >esperando confirmar o email</label>
+          <label className='LabelPadrao' style={{ color: esperandoConfirmError ? '#FF2E2E' : 'white', display: esperandoConfirmError ? 'block' : 'none', margin: 'auto', marginBottom: 15 }} >esperando confirmar o email</label>
 
 
-          <button id = 'advance' className='Button' onClick={logar}>Avançar</button>
+          <button id='advance' className='Button' onClick={logar}>Avançar</button>
 
           <div className='ToRegistro'>
             não tem uma conta? <Link to="/register">Registre-se</Link>

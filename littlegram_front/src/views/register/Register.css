@@ -31,7 +31,7 @@
   width: 90%;
   text-align: center;
   justify-content: center;
-  
+
 
 }
 
@@ -72,9 +72,10 @@ a {
 }
 
 @media (max-width:556px) {
-  .InputImage{
+  .InputImage {
     width: 183px;
   }
+
   .FormRegis {
     border-radius: 0px;
     margin: 0px;

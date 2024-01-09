@@ -5,8 +5,6 @@
     margin-left: 200px;
 }
 
-
-
 .PostDescricao {
     padding: 7px 0px;
     font-size: 14px;
@@ -18,7 +16,7 @@
 
 }
 
-.PostDescricaoLetra{
+.PostDescricaoLetra {
     cursor: pointer;
 }
 
@@ -88,6 +86,7 @@
 .ImagePost {
     width: 100%;
 }
+
 .ListViews {
     position: relative;
     top: 0px;
@@ -95,7 +94,7 @@
     height: calc(100vh - 99px);
 }
 
-.Modal{
+.Modal {
     width: 100%;
 }
 
@@ -109,7 +108,7 @@
     justify-content: center;
     width: 60%;
     /* overflow: hidden; */
-    
+
 }
 
 .LikeDiv {
@@ -122,25 +121,25 @@
     width: calc(100% - 50px);
 }
 
-.LikeButtom{
+.LikeButtom {
     width: 20px;
     filter: invert(100%);
     cursor: pointer;
 }
 
-.TrashButtom{
+.TrashButtom {
     cursor: pointer;
     width: 23px;
     margin-bottom: 5px;
     filter: invert(100%);
 }
 
-.ModalLikeButtom{
+.ModalLikeButtom {
     width: 15px;
     filter: invert(100%);
 }
 
-.ModalCommentsSide{
+.ModalCommentsSide {
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -161,7 +160,7 @@
     border: 2px solid white;
 }
 
-.ModalDescription{
+.ModalDescription {
     display: flex;
     justify-content: start;
     font-size: 14px;
@@ -172,7 +171,7 @@
     border-right: 2px solid white;
 }
 
-.ModalCommentsDiv{
+.ModalCommentsDiv {
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -184,7 +183,7 @@
 
 
 
-.ModalComments{
+.ModalComments {
     margin-bottom: 0px;
     margin-right: 0px;
     padding-right: 0px;
@@ -194,26 +193,26 @@
     color: white;
 }
 
-.ModalCommentsBackSide{
+.ModalCommentsBackSide {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
 
-.ModalLikeDiv{
+.ModalLikeDiv {
     display: flex;
     flex-direction: row;
 }
 
-.ModalUserName{
-    color: white; 
-    font-size: 18; 
-    font-weight: 500; 
+.ModalUserName {
+    color: white;
+    font-size: 18;
+    font-weight: 500;
     padding-left: 3px;
 }
 
-.ModalAddCommentDiv{
+.ModalAddCommentDiv {
     justify-content: start;
     padding: 5px 5px 5px 10px;
     border-bottom: 2px solid white;
@@ -221,28 +220,30 @@
     border-right: 2px solid white;
 }
 
-.CommentBox{
+.CommentBox {
     background-color: var(--color3);
     color: white;
     border: none;
     padding: 10px 11px;
     height: 80px;
 }
-.CommentBox:focus-visible{
+
+.CommentBox:focus-visible {
     outline: none;
 }
-.AddCommentModal{
+
+.AddCommentModal {
     display: flex;
     flex-direction: column;
     justify-self: start;
 }
 
-.CommentBox::placeholder{
+.CommentBox::placeholder {
     font-size: 14px;
     color: white;
 }
 
-.ButtonAddComment{
+.ButtonAddComment {
     margin-top: 5px;
     background-color: var(--color5);
     font-size: 15px;
@@ -251,32 +252,37 @@
     border-radius: 30px;
     border-color: transparent;
 }
-.FecharModal{
+
+.FecharModal {
     display: flex;
     justify-content: flex-end;
     cursor: pointer;
     margin-bottom: 15px;
 }
-#ImagePostDetail svg{
+
+#ImagePostDetail svg {
     height: 100% !important;
 }
-#ImagePostDetail svg image{
+
+#ImagePostDetail svg image {
     width: 100%;
     height: auto;
 }
-.DivScroolComments{
+
+.DivScroolComments {
     max-height: 280px;
     height: 100%;
     overflow: auto;
 
 }
-.Modal3Pontos{
+
+.Modal3Pontos {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.BlockModal3Pontos{
+.BlockModal3Pontos {
     font-size: 25px;
     color: white;
     padding: 5px;
@@ -292,19 +298,24 @@
         margin-left: 0px;
         margin-bottom: 0px;
     }
+
     .ListViews {
         height: calc(100vh - 166px);
     }
-    .ModalPost{
+
+    .ModalPost {
         display: block;
     }
-    .ModalImage{
+
+    .ModalImage {
         width: 100%;
     }
-    .ModalCommentsSide{
+
+    .ModalCommentsSide {
         width: 100%;
     }
-    .ModalComments{
+
+    .ModalComments {
         max-width: 70%;
     }
 
@@ -315,20 +326,25 @@
     .ModalMaior {
         min-width: calc(100% - 60px);
     }
-    .ModalPost{
+
+    .ModalPost {
         display: block;
     }
-    .ModalImage{
+
+    .ModalImage {
         width: 100%;
     }
-    .ModalCommentsSide{
+
+    .ModalCommentsSide {
         width: 100%;
     }
-    .ModalComments{
+
+    .ModalComments {
         max-width: 70%;
     }
 
 }
+
 @media (max-width: 576px) {
     .modal.show .modal-dialog {
         margin: 0px;

@@ -2,7 +2,7 @@ import axios from 'axios';
 import config from '../../config.js'
 import { useEffect, useState } from 'react';
 
-function Posts({ postsData , activeScroll = true }) {
+function Posts({ postsData, activeScroll = true }) {
 
     const [posts, setPost] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
@@ -37,12 +37,12 @@ function Posts({ postsData , activeScroll = true }) {
     }, []);
     return (
         <div style={{ position: 'relative', top: 0, overflow: 'auto', height: 'calc(100vh - 166px)' }} onScroll={handleScroll} >
-                {posts.length > 0 && posts.map((post, index) => (
-                    <div key={index} className='DashPhoto'>
-                        <img src={config.baseURL + "/files/photos/" + post.photo.path} alt="" className="ImagePost" />
-                        <span>{post.description}</span>
-                    </div>
-                ))}
+            {posts.length > 0 && posts.map((post, index) => (
+                <div key={index} className='DashPhoto'>
+                    <img src={config.baseURL + "/files/photos/" + post.photo.path} alt="" className="ImagePost" />
+                    <span>{post.description}</span>
+                </div>
+            ))}
         </div>
 
     );

@@ -48,13 +48,13 @@ function Register() {
     setSenhaError(senha === "" || (senha !== confirm_senha) || !validarSenha(senha) ? true : false)
     setConfirmSenhaError(confirm_senha === "" || (senha !== confirm_senha) || !validarSenha(confirm_senha) ? true : false)
     setCadastradoError(false)
-    setImageError( image.file === null ? true : false)
+    setImageError(image.file === null ? true : false)
 
 
 
     if (image.file !== "" && username !== "" && nome !== "" && sobrenome !== "" && email !== "" && senha !== "" && confirm_senha !== "" && (senha === confirm_senha) && isEmail(email) && validarSenha(senha) && validarSenha(confirm_senha)) {
 
-    
+
       instance.post('/users', {
         realName: nome + sobrenome,
         username: username,
@@ -66,18 +66,18 @@ function Register() {
 
             const form = new FormData();
             form.append('avatar', image.fileReal);
-            axios.patch(config.baseURL + '/users/avatar',form,  {
-              headers: {  'Content-Type': 'multipart/form-data',  Authorization: 'Bearer '+response.data.token }
-          }).then(()=>{
-            if(response.status === 200){
-              navigate('/')
-            }
-          }).catch((error) => {
-          })
-         
+            axios.patch(config.baseURL + '/users/avatar', form, {
+              headers: { 'Content-Type': 'multipart/form-data', Authorization: 'Bearer ' + response.data.token }
+            }).then(() => {
+              if (response.status === 200) {
+                navigate('/')
+              }
+            }).catch((error) => {
+            })
+
             setCadastradoError(false)
-            
-          //  history('/home');
+
+            //  history('/home');
 
           }
         })
@@ -109,17 +109,17 @@ function Register() {
             <img alt='' src={image.file} style={{ width: 130, height: 130, background: 'white', borderRadius: '50%', }} accept="image/*" />
             <label htmlFor='imageInput' className='InputImage' style={{ color: imageError ? '#FF2E2E' : 'black' }} >Adicionar Imagem</label>
             <input accept="image/png,image/jpeg" id='imageInput' className='' style={{ display: 'none' }} type='file' onChange={(event) => {
-                const file = event.target.files[0];
-                const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-                if (!acceptedImageTypes.includes(file['type']) || !checkImageSize()) {
-                  setImageError(true);
-                  setImage({
-                    fileReal: "",
-                    file:""
-                  })
-                  return;
-                }
-                setImageError(false);
+              const file = event.target.files[0];
+              const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+              if (!acceptedImageTypes.includes(file['type']) || !checkImageSize()) {
+                setImageError(true);
+                setImage({
+                  fileReal: "",
+                  file: ""
+                })
+                return;
+              }
+              setImageError(false);
 
               setImage({
                 fileReal: event.target.files[0],
@@ -149,7 +149,7 @@ function Register() {
             setUsername(event.target.value);
           }} />
           {/* Senha */}
-          <label  className='LabelPadrao' style={{ color: confirmSenhaError || senhaError ? '#FF2E2E' : 'white' }} >senha</label>
+          <label className='LabelPadrao' style={{ color: confirmSenhaError || senhaError ? '#FF2E2E' : 'white' }} >senha</label>
           <input id='password' maxLength={200} className='InputPadrao' style={{ marginBottom: confirmSenhaError || senhaError ? 5 : 15, border: confirmSenhaError || senhaError ? '#FF2E2E 2px solid' : 'white 2px solid', background: confirmSenhaError || senhaError ? 'linear-gradient(0deg, rgba(255, 46, 46, 0.20) 0%, rgba(255, 46, 46, 0.20) 100%), #AF70FD' : 'transparent' }} type='password' value={senha} onChange={(event) => {
             setSenha(event.target.value);
           }} />
