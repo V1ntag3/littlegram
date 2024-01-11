@@ -1,5 +1,5 @@
 # install node
-FROM node:21-alpine
+FROM node:18-alpine
 
 # Definir o usuário padrão
 USER root
