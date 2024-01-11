@@ -1,19 +1,25 @@
 # install node
 FROM node:21-alpine
 
+# Definir o usuário padrão
+USER root
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+RUN npm install -g npm@10.3.0
 
-WORKDIR /home/node/app
+RUN mkdir -p /usr/app/node_modules && chown -R root:root /usr/app
+
+#INSTALL AND RUN NPM 
+
+WORKDIR /usr/app
 
 COPY package*.json ./
 
-USER node
+ENV NODE_ENV production
 
-RUN npm install
+RUN npm ci --only=dev
 
-COPY --chown=node:node . .
+COPY --chown=node:node . ./
 
 EXPOSE 3000
 
-CMD [ "npm", "start" ]
+CMD ["npm start"]
