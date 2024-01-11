@@ -2,20 +2,18 @@
 FROM node:21-alpine
 
 
-RUN mkdir -p /apps/littlegram_front/node_modules && chown -R node:node /apps/littlegram_front
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
-#INSTALL AND RUN NPM 
-
-WORKDIR /apps/littlegram_front
+WORKDIR /home/node/app
 
 COPY package*.json ./
 
-ENV NODE_ENV production
+USER node
 
-RUN npm ci --only=production
+RUN npm install
 
-COPY --chown=node:node . ./
+COPY --chown=node:node . .
 
 EXPOSE 3000
 
-CMD ["npm start"]
+CMD [ "npm", "start" ]
