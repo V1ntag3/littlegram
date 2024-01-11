@@ -36,7 +36,7 @@ export class UsersController {
       avatar,
       bio,
       isAdmin: isAdmin || false,
-      confirmed: false,
+      confirmed: true,
     });
 
     const { token } = await authenticateUserService.execute({

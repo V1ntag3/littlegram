@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  nodejs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nodejs
+    container_name: littlegram_front
+    restart: unless-stopped
+    networks:
+      - app-network
+  webserver:
+    image: nginx:mainline-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - web-root:/var/www/html
+      - ./docker/nginx/:/etc/nginx/conf.d
+      # - certbot-etc:/etc/letsencrypt
+      # - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - nodejs
+    networks:
+      - app-network
+  # certbot:
+  #   image: certbot/certbot
+  #   container_name: certbot
+  #   volumes:
+  #     - certbot-etc:/etc/letsencrypt
+  #     - certbot-var:/var/lib/letsencrypt
+  #     - web-root:/var/www/html
+  #   depends_on:
+  #     - webserver
+  #   command: certonly --webroot --webroot-path=/var/www/html --email suporte@inkless.digital --agree-tos --no-eff-email --staging -d app.codex.inkless.digital  -d www.app.codex.inkless.digital 
+volumes:
+  # certbot-etc:
+  # certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /apps/littlegram_front
+      o: bind
+
+networks:
+  app-network:
+    driver: bridge

@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  nodejs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nodejs
+    container_name: littlegram_back
+    restart: unless-stopped
+    networks:
+      - app-network
+  webserver:
+    image: nginx:mainline-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - web-root:/var/www/html
+      - ./docker/nginx/:/etc/nginx/conf.d
+    depends_on:
+      - nodejs
+    networks:
+      - app-network
+volumes:
+
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /apps/littlegram_back
+      o: bind
+
+networks:
+  app-network:
+    driver: bridge
