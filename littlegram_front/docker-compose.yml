@@ -7,7 +7,6 @@ services:
       dockerfile: Dockerfile
     image: nodejs
     container_name: littlegram_front
-    restart: unless-stopped
     networks:
       - app-network
   webserver:
