@@ -28,7 +28,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /apps/littlegram_front/src/
+      device: /apps/littlegram/littlegram_front/src/
       o: bind
 
 networks:
