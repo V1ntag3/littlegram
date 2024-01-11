@@ -1,8 +1,14 @@
+.BtnAdd{
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 1000;
+}
 .PostDashBoard {
-    max-width: 600px;
+    max-width: calc(100vw - 305px);
     width: 100%;
     border: 2px solid white;
-    margin-left: 200px;
+    margin-left: 310px;
 }
 
 .PostDescricao {
@@ -91,7 +97,7 @@
     position: relative;
     top: 0px;
     overflow: auto;
-    height: calc(100vh - 99px);
+    height: calc(100vh - 4px);
 }
 
 .Modal {
@@ -294,13 +300,17 @@
 }
 
 @media (max-width:994px) {
+    .BtnAdd{
+        bottom: 80px;
+    }
     .PostDashBoard {
         margin-left: 0px;
         margin-bottom: 0px;
+        max-width: 100%;
     }
 
     .ListViews {
-        height: calc(100vh - 166px);
+        height: calc(100vh - 72px);
     }
 
     .ModalPost {

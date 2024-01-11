@@ -2,36 +2,9 @@ import './Login.css';
 import LoginSVG from "../../assets/imgs/login.svg"
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import config from '../../config'
-import { isNoAuth } from '../validators';
-const instance = axios.create({
-  baseURL: config.baseURL,
-  headers: {
-    'Access-Control-Allow-Origin': '*'
-  }
-});
-function validarSenha(senha) {
-  // Verifica se a senha tem pelo menos 8 caracteres
-  if (senha.length < 8) {
-    return false;
-  }
+import Validators from '../Validators';
+import instance from '../api';
 
-  // Verifica se a senha contém pelo menos um caractere especial
-  const caractereEspecial = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\|]/;
-  if (!caractereEspecial.test(senha)) {
-    return false;
-  }
-
-  // Verifica se a senha contém pelo menos uma letra maiúscula
-  const letraMaiuscula = /[A-Z]/;
-  if (!letraMaiuscula.test(senha)) {
-    return false;
-  }
-
-  // Se todos os critérios forem atendidos, a senha é válida
-  return true;
-}
 function Login() {
   const navigate = useNavigate()
   // "variaveis"
@@ -39,24 +12,21 @@ function Login() {
   const [senha, setSenha] = useState('');
 
   // erros
-
   const [emailError, setEmailError] = useState(false);
   const [senhaError, setSenhaError] = useState(false);
   const [userInvalid, setUserInvalid] = useState(false)
   const [esperandoConfirmError, setEsperandoConfirmError] = useState(false)
-  const isEmail = (email) => {
-    const emailRegex = /^([a-zA-Z][^<>\"!@[\]#$%¨&*()~^:;ç,\-´`=+{}º\|/\\?]{1,})@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    return emailRegex.test(String(email).toLowerCase())
-  }
+
   useEffect(() => {
-    isNoAuth(navigate)
+    Validators.isNoAuth(navigate)
   })
-  async function logar() {
+  const onSubmit = (event) => {
+    event.preventDefault();
 
-    setEmailError(email === "" || !isEmail(email) ? true : false)
-    setSenhaError(senha === "" || !validarSenha(senha) ? true : false)
+    setEmailError(email === "" || !Validators.isEmail(email) ? true : false)
+    setSenhaError(senha === "" || !Validators.isValidPassword(senha) ? true : false)
 
-    if (senha !== "" && email !== "" && isEmail(email) && validarSenha(senha)) {
+    if (senha !== "" && email !== "" && Validators.isEmail(email) && Validators.isValidPassword(senha)) {
 
 
       instance.post('/sessions', {
@@ -81,7 +51,7 @@ function Login() {
           }
         })
         .catch(function (error) {
-          if (error.response.data['message'] == "Email or password incorrect") {
+          if (error.response.data['message'] === "Email or password incorrect") {
             setUserInvalid(true)
           }
         });
@@ -93,11 +63,11 @@ function Login() {
       <div className="Image">
         <div className='ContainerImage'>
           <h1 className="Tittle">Entre para se conectar e compartilhar momentos.</h1>
-          <img src={LoginSVG} alt="" />
+          <img src={LoginSVG} alt="login" />
         </div>
 
       </div>
-      <div className="Form">
+      <form onSubmit={onSubmit} className='Form'>
         <div style={{ display: 'block' }}>
           <h3 className='AppName'>Littlegram</h3>
           <label htmlFor='email' className='LabelPadrao' style={{ color: emailError ? '#FF2E2E' : 'white' }} >email</label>
@@ -114,14 +84,13 @@ function Login() {
 
           <label className='LabelPadrao' style={{ color: esperandoConfirmError ? '#FF2E2E' : 'white', display: esperandoConfirmError ? 'block' : 'none', margin: 'auto', marginBottom: 15 }} >esperando confirmar o email</label>
 
-
-          <button id='advance' className='Button' onClick={logar}>Avançar</button>
+          <button id='advance' type='submit' className='Button' >Avançar</button>
 
           <div className='ToRegistro'>
             não tem uma conta? <Link to="/register">Registre-se</Link>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

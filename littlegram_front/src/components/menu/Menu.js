@@ -8,7 +8,7 @@ import UserDefault from '../../assets/imgs/user.svg'
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import config from '../../config'
-import { isAuth } from '../../views/validators';
+import Validators from '../../views/Validators';
 import ImageLogout from '../../assets/imgs/logoutImage.svg'
 import Modal from 'react-bootstrap/Modal'
 
@@ -21,7 +21,7 @@ function Menu() {
   const getData = () => {
     setPerfil(localStorage.getItem('username'))
     setImage(config.baseURL + '/files/avatar/' + localStorage.getItem('avatar'))
-    isAuth(navigate)
+    Validators.isAuth(navigate)
   }
   const logout = () => {
     localStorage.removeItem('avatar')
@@ -107,7 +107,7 @@ function Menu() {
         <Modal.Body style={{ backgroundColor: 'var(--color3)' }}>
           <h1 style={{ color: 'white', width: '100%', fontWeight: 500, textAlign: 'left' }}>Logout</h1>
 
-          <img src={ImageLogout} style={{ width: '85%', margin: '0px auto', textAlign: 'center' }} />
+          <img alt='logout' src={ImageLogout} style={{ width: '85%', margin: '0px auto', textAlign: 'center' }} />
           <h1 style={{
             color: 'white', fontSize: '25px', width: '100%', marginBottom: '5px',
           }}>Tem certeza que deseja sair?</h1>

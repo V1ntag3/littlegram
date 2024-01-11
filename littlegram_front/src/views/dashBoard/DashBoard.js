@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import Menu from '../../components/menu/Menu.js'
 import config from '../../config';
-import axios from 'axios'
 import ImageFilter from 'react-image-filter';
 import { useNavigate } from 'react-router-dom';
 import TresPontos from '../../assets/imgs/tres-pontos.svg'
@@ -14,7 +13,11 @@ import likeImg from '../../assets/imgs/like.svg'
 import fullLikeImg from '../../assets/imgs/fullLike.svg'
 import X from '../../assets/imgs/x.svg'
 import lixo from '../../assets/imgs/lixo.svg'
-
+import ModalYesNo from '../../components/ModalYesNo/ModalYesNo.js';
+import Blank from './../../assets/imgs/404 error lost in space-amico.svg'
+import instance from '../api.js';
+import utilities from '../utilities.js';
+import Validators from '../Validators.js';
 function DashBoard() {
   // Controladores da requisição
   const [isFetchingPhotos, setIsFetchingPhotos] = useState(false);
@@ -59,7 +62,7 @@ function DashBoard() {
 
   function getPosts() {
     setIsFetchingPosts(true);
-    axios.get(config.baseURL + "/posts/?limit=10&offset=" + offSetPosts, {
+    instance.get(config.baseURL + "/posts/?limit=10&offset=" + offSetPosts, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -81,7 +84,7 @@ function DashBoard() {
 
   const getPhotos = () => {
     setIsFetchingPhotos(true);
-    axios.get(config.baseURL + "/photos/user/?limit=10&offset=" + offSetPhotos, {
+    instance.get(config.baseURL + "/photos/user/?limit=10&offset=" + offSetPhotos, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -106,7 +109,7 @@ function DashBoard() {
   }
 
   const uploadPost = () => {
-    axios.post(config.baseURL + "/posts/", {
+    instance.post(config.baseURL + "/posts/", {
       photoId: photos[selectedImage].id,
       description: descricao,
       filterUsed: String(selectedFilter)
@@ -123,7 +126,7 @@ function DashBoard() {
   }
 
   const createLike = (postId, likeV) => {
-    axios.post(config.baseURL + "/posts-evaluations/", {
+    instance.post(config.baseURL + "/posts-evaluations/", {
       isLike: likeV,
       postId: postId
     }, {
@@ -139,7 +142,7 @@ function DashBoard() {
   }
 
   const createCommentLike = (Id, likeV) => {
-    axios.post(config.baseURL + "/comments-evaluations/", {
+    instance.post(config.baseURL + "/comments-evaluations/", {
       isLike: likeV,
       commentId: Id
     }, {
@@ -155,7 +158,7 @@ function DashBoard() {
   }
 
   const createComment = (postId, comment) => {
-    axios.post(config.baseURL + "/comments/", {
+    instance.post(config.baseURL + "/comments/", {
       text: comment,
       postId: postId
     }, {
@@ -171,7 +174,7 @@ function DashBoard() {
 
   const getComments = (postId) => {
     setIsFetchingComments(true);
-    axios.get(config.baseURL + "/comments/post/" + postId + "?limit=10&offset=" + offsetComment, {
+    instance.get(config.baseURL + "/comments/post/" + postId + "?limit=10&offset=" + offsetComment, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -190,7 +193,7 @@ function DashBoard() {
   const deleteComment = (postId, commentId) => {
     console.log(commentId)
     console.log(postId)
-    axios.delete(config.baseURL + "/comments/?postId=" + postId + "&commentId=" + commentId, {
+    instance.delete(config.baseURL + "/comments/?postId=" + postId + "&commentId=" + commentId, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -204,7 +207,7 @@ function DashBoard() {
   }
 
   const deleteAllComment = (postId) => {
-    axios.delete(config.baseURL + "/comments/post/?postId=" + postId, {
+    instance.delete(config.baseURL + "/comments/post/?postId=" + postId, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -237,7 +240,7 @@ function DashBoard() {
   }
 
   const deletePost = (postId) => {
-    axios.delete(config.baseURL + "/posts/?postId=" + postId, {
+    instance.delete(config.baseURL + "/posts/?postId=" + postId, {
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
       }
@@ -250,57 +253,25 @@ function DashBoard() {
     })
   }
 
-  const validComment = (comment) => {
-    return comment.trim() === '';
-  }
-
   useEffect(() => {
     getPosts()
   }, [])
 
-  const returnBackground = (url) => {
-    var part1 = "url("
-    var part2 = url === "" ? "" : config.baseURL + '/files/avatar/' + url
-    var part3 = ")  center/cover"
-    return part1 + part2 + part3
-  }
-  const returnData = (date) => {
-    var datePost = new Date(date)
-    const meses = [
-      'janeiro',
-      'fevereiro',
-      'março',
-      'abril',
-      'maio',
-      'junho',
-      'julho',
-      'agosto',
-      'setembro',
-      'outubro',
-      'novembro',
-      'dezembro',
-    ];
-    return datePost.getDate() + ' de ' + meses[datePost.getMonth()] + ' de ' + datePost.getFullYear() + ' às ' + datePost.getUTCHours() + ':' + datePost.getUTCMinutes() + ':' + datePost.getUTCSeconds()
-  }
-  const returnBackgroundImages = (url) => {
-    var part1 = "url("
-    var part2 = url
-    var part3 = ")  center/cover"
-    return part1 + part2 + part3
-  }
   return (
 
     <>
       <div className="Container">
         <Menu />
         <div className='PostDashBoard'>
-          <div style={{ width: '100%', padding: 15, textAlign: 'center' }}><button onClick={() => { setOpenNewPost(true); getPhotos() }} className='ButtonPhoto'>Adicionar Post</button></div>
+
+          <div className='BtnAdd'><button onClick={() => { setOpenNewPost(true); getPhotos() }} className='ButtonPhoto'>Postar</button></div>
+
           <div className='ListViews' onScroll={handleScrollPosts} >
-            {posts.length > 0 && posts.map((post, index) => (
+            {posts.length > 0 ? posts.map((post, index) => (
               <div key={index} className='DashPhoto' style={{ paddingTop: 0 }}>
                 <div className='PostHeader'>
                   <div style={{ cursor: 'pointer', display: 'flex' }} onClick={() => { navigate('/profile/' + post.user.id) }}>
-                    <div style={{ background: returnBackground(post.user.avatar), width: 40, height: 40, border: 'solid 1px white', margin: 'auto 0px' }} className='ImagePerfilMenu'  ></div>
+                    <div style={{ background: utilities.returnBackgroundImages(config.baseURL + "/files/avatar/" + post.user.avatar), width: 40, height: 40, border: 'solid 1px white', margin: 'auto 0px' }} className='ImagePerfilMenu'  ></div>
                     <span style={{ color: 'white', fontSize: 18, fontWeight: 500, margin: 'auto 10px' }}>{'@' + post.user.username}</span>
                   </div>
 
@@ -347,11 +318,12 @@ function DashBoard() {
                     getComments(post.id)
                   }}>ver os comentários</span>
 
-                  <span style={{ cursor: 'auto' }} className='PostDescricaoLetra'>{returnData(post.createdAt)}</span>
+                  <span style={{ cursor: 'auto' }} className='PostDescricaoLetra'>{utilities.returnDate(post.createdAt)}</span>
 
                 </div>
               </div>
-            ))}
+            )) : <div className='BlankData'><img style={{ maxWidth: 500 }} alt="nada" src={Blank} /> <h4 style={{ color: 'white', marginTop: 10 }}>Ops... não temos nenhum post, seja o primeiro</h4> </div>
+            }
           </div>
         </div>
       </div>
@@ -365,14 +337,14 @@ function DashBoard() {
           <h1 style={{ color: 'white', width: '100%', fontWeight: 500, textAlign: 'left' }}>Novo Post:</h1>
           <h3 style={{ textAlign: 'left', color: 'white' }}>Selecione uma imagem</h3>
           <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', border: 'none' }} className='DashPhoto'>
-            {photos.length > 0 && photos.map((photo, index) => (
+            {photos.length > 0 ? photos.map((photo, index) => (
               <div key={index} onClick={() => {
                 setSelectedImage(index)
                 setOpenNewPost(false)
                 setOpenFilter(true)
-              }} className='PhotoToPost' style={{ background: returnBackgroundImages(config.baseURL + "/files/photos/" + photo.path) }}>
+              }} className='PhotoToPost' style={{ background: utilities.returnBackgroundImages(config.baseURL + "/files/photos/" + photo.path) }}>
               </div>
-            ))}
+            )) : <><img style={{ maxWidth: 500 }} alt="nada" src={Blank} /> <h4 style={{ color: 'white', marginTop: 10 }}>Ops... Parece que não tem nada aqui, adicione uma foto para poder postar</h4> </>}
           </div>
 
         </Modal.Body>
@@ -407,28 +379,6 @@ function DashBoard() {
         </Modal.Body>
       </Modal>
 
-      <Modal show={openDelete} onHide={() => {
-        setOpenDelete(openDelete ? false : true)
-      }}>
-        <Modal.Body style={{ backgroundColor: 'var(--color3)' }}>
-          <h1 style={{ color: 'white', width: '100%', fontWeight: 500, textAlign: 'left' }}>Deletar Post</h1>
-
-          <img src={Trash} />
-          <h1 style={{
-            width: '100%', color: 'white', fontSize: '25px', marginBottom: '5px',
-          }}>Deseja mesmo excluir permanentemente esse post?</h1>
-          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: '20px' }}>
-
-
-            <button className='ButtonModal' onClick={() => { deletePost(selectedExclude) }}>Sim</button>
-            <button className='ButtonModal' onClick={() => {
-              setOpenDelete(openDelete ? false : true)
-            }}>Não</button>
-          </div>
-        </Modal.Body>
-      </Modal>
-
-      {/*vw = tamanho da tela*/}
       <Modal show={openComments} dialogClassName='Modal' style={{ overflowY: "auto" }} size='xl' onHide={() => {
         setOpenComments(openComments ? false : true)
         setComments([])
@@ -458,7 +408,7 @@ function DashBoard() {
                 </div>
                 <div className='ModalCommentsSide'>
                   <div className='ModalPostHeader'>
-                    <div style={{ background: returnBackground(post.user.avatar), width: 40, height: 40, border: 'solid 1px white', margin: 'auto 0px' }} className='ImagePerfilMenu'  ></div>
+                    <div style={{ background: utilities.returnBackgroundImages(config.baseURL + "/files/avatar/" + post.user.avatar), width: 40, height: 40, border: 'solid 1px white', margin: 'auto 0px' }} className='ImagePerfilMenu'  ></div>
                     <span className='ModalUserName'>{'@' + post.user.username}</span>
                   </div>
                   <span className='ModalDescription'>{post.description}</span>
@@ -507,7 +457,7 @@ function DashBoard() {
                   }}></textarea>
                   <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <button className='ButtonAddComment' onClick={() => {
-                      validComment(commentPost) === false ? createComment(post.id, commentPost) : console.log();
+                      Validators.isBlank(commentPost) === false ? createComment(post.id, commentPost) : console.log();
                     }}>Adicionar comentário</button>
                   </div>
                 </div>
@@ -517,27 +467,7 @@ function DashBoard() {
         </Modal.Body>
       </Modal>
 
-      <Modal show={openDeleteComment} onHide={() => {
-        setOpenDelete(openDeleteComment ? false : true)
-      }}>
-        <Modal.Body style={{ backgroundColor: 'var(--color3)' }}>
-          <h1 style={{ color: 'white', width: '100%', fontWeight: 500, textAlign: 'left' }}>Deletar comentário</h1>
 
-          <img src={Trash} />
-          <h1 style={{
-            width: '100%', color: 'white', fontSize: '25px', marginBottom: '5px',
-          }}>Deseja mesmo excluir permanentemente esse comentário?</h1>
-          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: '20px' }}>
-            <button className='ButtonModal' onClick={() => {
-              deleteComment(selectedViewComments, commentIdDel)
-              setOpenDeleteComment(openDeleteComment ? false : true)
-            }}>Sim</button>
-            <button className='ButtonModal' onClick={() => {
-              setOpenDeleteComment(openDeleteComment ? false : true)
-            }}>Não</button>
-          </div>
-        </Modal.Body>
-      </Modal>
 
       <Modal show={openModal3Pontos} onHide={() => {
         setOpenModal3Pontos(openModal3Pontos ? false : true)
@@ -554,27 +484,23 @@ function DashBoard() {
         </Modal.Body>
       </Modal>
 
-      <Modal show={openDeleteAllComment} onHide={() => {
-        setOpenDeleteAllComment(openDeleteAllComment ? false : true)
-      }}>
-        <Modal.Body style={{ backgroundColor: 'var(--color3)' }}>
-          <h1 style={{ color: 'white', width: '100%', fontWeight: 500, textAlign: 'left' }}>Deletar todos os comentário?</h1>
+      <ModalYesNo show={openDelete} onHide={() => {
+        setOpenDelete(openDelete ? false : true)
+      }} image={Trash} setShow={setOpenDeleteAllComment} title="Deletar Post" subtitle="Deseja mesmo excluir permanentemente esse post?" confirmFunction={() => { deletePost(selectedExclude) }} />
 
-          <img src={Trash} />
-          <h1 style={{
-            width: '100%', color: 'white', fontSize: '25px', marginBottom: '5px',
-          }}>Deseja mesmo excluir permanentemente todos os comentários desse post?</h1>
-          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: '20px' }}>
-            <button className='ButtonModal' onClick={() => {
-              deleteAllComment(selectedExclude)
-              setOpenDeleteAllComment(openDeleteAllComment ? false : true)
-            }}>Sim</button>
-            <button className='ButtonModal' onClick={() => {
-              setOpenDeleteAllComment(openDeleteAllComment ? false : true)
-            }}>Não</button>
-          </div>
-        </Modal.Body>
-      </Modal>
+      <ModalYesNo show={openDeleteComment} onHide={() => {
+        setOpenDelete(openDeleteComment ? false : true)
+      }} image={Trash} setShow={setOpenDeleteAllComment} title="Deletar comentário" subtitle="Deseja mesmo excluir permanentemente esse comentário?" confirmFunction={() => {
+        deleteComment(selectedViewComments, commentIdDel)
+        setOpenDeleteComment(openDeleteComment ? false : true)
+      }} />
+
+      <ModalYesNo show={openDeleteAllComment} onHide={() => {
+        setOpenDeleteAllComment(openDeleteAllComment ? false : true)
+      }} image={Trash} setShow={setOpenDeleteAllComment} title="Deletar todos os comentário?" subtitle="Deseja mesmo excluir permanentemente todos os comentários desse post?" confirmFunction={() => {
+        deleteAllComment(selectedExclude)
+        setOpenDeleteAllComment(openDeleteAllComment ? false : true)
+      }} />
 
     </>
 

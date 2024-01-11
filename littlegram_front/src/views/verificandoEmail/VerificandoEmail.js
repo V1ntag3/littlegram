@@ -1,19 +1,9 @@
 import './VerificandoEmail.css';
 
-import axios from 'axios';
-import config from '../../config'
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
-
-const instance = axios.create({
-  baseURL: config.baseURL,
-  headers: {
-    'Access-Control-Allow-Origin': '*'
-  }
-});
-
-
+import instance from '../api'
 
 function VerificandoEmail() {
   const { email, token } = useParams();
@@ -25,7 +15,7 @@ function VerificandoEmail() {
         email: email,
         token: token
       }).then((response) => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           navigate('/')
         }
       })
@@ -39,7 +29,6 @@ function VerificandoEmail() {
       <Spinner animation="grow" size='' style={{ width: 150, height: 150, color: 'white' }} color='#fff' />
       <h1 style={{ marginTop: 40, fontSize: 35 }} className='ValidandoTitle'>Validando Email...</h1>
       <h3 style={{ position: 'absolute', bottom: 10, width: '100%' }} className='AppName'>Littlegram</h3>
-
     </div>
   );
 }

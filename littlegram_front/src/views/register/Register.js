@@ -4,16 +4,8 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../config'
-import { checkImageSize, validarSenha, isEmail } from '../validators';
-import { isNoAuth } from '../validators';
-
-const instance = axios.create({
-  baseURL: config.baseURL,
-  headers: {
-    'Access-Control-Allow-Origin': '*'
-  }
-});
-
+import Validators from '../Validators';
+import instance from '../api';
 
 function Register() {
   const navigate = useNavigate();
@@ -39,59 +31,56 @@ function Register() {
   const [cadastradoError, setCadastradoError] = useState(false)
 
 
-  function registrar() {
-
+  const onSubmit = (event) => {
+    event.preventDefault();
     setNomeError(nome === "" ? true : false)
     setUsernameError(username === "" ? true : false)
     setsobreNomeError(sobrenome === "" ? true : false)
-    setEmailError(email === "" || !isEmail(email) ? true : false)
-    setSenhaError(senha === "" || (senha !== confirm_senha) || !validarSenha(senha) ? true : false)
-    setConfirmSenhaError(confirm_senha === "" || (senha !== confirm_senha) || !validarSenha(confirm_senha) ? true : false)
+    setEmailError(email === "" || !Validators.isEmail(email) ? true : false)
+    setSenhaError(senha === "" || (senha !== confirm_senha) || !Validators.isValidPassword(senha) ? true : false)
+    setConfirmSenhaError(confirm_senha === "" || (senha !== confirm_senha) || !Validators.isValidPassword(confirm_senha) ? true : false)
     setCadastradoError(false)
     setImageError(image.file === null ? true : false)
 
 
 
-    if (image.file !== "" && username !== "" && nome !== "" && sobrenome !== "" && email !== "" && senha !== "" && confirm_senha !== "" && (senha === confirm_senha) && isEmail(email) && validarSenha(senha) && validarSenha(confirm_senha)) {
-
+    if (image.file !== "" && username !== "" && nome !== "" && sobrenome !== "" && email !== "" && senha !== "" && confirm_senha !== "" && (senha === confirm_senha) && Validators.isEmail(email) && Validators.isValidPassword(senha) && Validators.isValidPassword(confirm_senha)) {
 
       instance.post('/users', {
         realName: nome + sobrenome,
         username: username,
         email: email,
         password: senha
+      }).then(function (response) {
+        if (response.status === 200) {
+
+          const form = new FormData();
+          form.append('avatar', image.fileReal);
+          axios.patch(config.baseURL + '/users/avatar', form, {
+            headers: { 'Content-Type': 'multipart/form-data', Authorization: 'Bearer ' + response.data.token }
+          }).then(() => {
+            if (response.status === 200) {
+              navigate('/')
+            }
+          }).catch((error) => {
+          })
+          setCadastradoError(false)
+        }
       })
-        .then(function (response) {
-          if (response.status === 200) {
-
-            const form = new FormData();
-            form.append('avatar', image.fileReal);
-            axios.patch(config.baseURL + '/users/avatar', form, {
-              headers: { 'Content-Type': 'multipart/form-data', Authorization: 'Bearer ' + response.data.token }
-            }).then(() => {
-              if (response.status === 200) {
-                navigate('/')
-              }
-            }).catch((error) => {
-            })
-
-            setCadastradoError(false)
-
-            //  history('/home');
-
-          }
-        })
         .catch(function (error) {
           if (error.response.data['message'] === "Username or email already exists") {
-
             setCadastradoError(true)
           }
+        }).finally(() => {
+
         });
     }
   }
+
   useEffect(() => {
-    isNoAuth(navigate)
+    Validators.isNoAuth(navigate)
   })
+
   return (
     <div className="Container">
       <div className="Image">
@@ -101,7 +90,7 @@ function Register() {
         </div>
 
       </div>
-      <div className="FormRegis">
+      <form onSubmit={onSubmit} action='off' className="FormRegis">
         <div style={{ display: 'inline-block', height: 'auto' }}>
           <h3 className='AppName'>Littlegram</h3>
           {/* Image input */}
@@ -111,7 +100,7 @@ function Register() {
             <input accept="image/png,image/jpeg" id='imageInput' className='' style={{ display: 'none' }} type='file' onChange={(event) => {
               const file = event.target.files[0];
               const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-              if (!acceptedImageTypes.includes(file['type']) || !checkImageSize()) {
+              if (!acceptedImageTypes.includes(file['type']) || !Validators.checkImageSize()) {
                 setImageError(true);
                 setImage({
                   fileReal: "",
@@ -160,13 +149,13 @@ function Register() {
           }} />
           <label className='LabelPadrao' style={{ color: cadastradoError ? '#FF2E2E' : 'white', display: cadastradoError ? 'block' : 'none', margin: 'auto', marginBottom: 15 }} >email ou username já cadastrado</label>
 
-          <button id='advance' className='ButtonRegis' onClick={registrar}>Avançar</button>
+          <button type='submit' id='advance' className='ButtonRegis'>Avançar</button>
 
         </div>
         <div className='ToRegistroRegis'>
           já tenho uma conta? <Link to='/'>Loge-se</Link>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

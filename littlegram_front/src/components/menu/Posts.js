@@ -39,7 +39,7 @@ function Posts({ postsData, activeScroll = true }) {
         <div style={{ position: 'relative', top: 0, overflow: 'auto', height: 'calc(100vh - 166px)' }} onScroll={handleScroll} >
             {posts.length > 0 && posts.map((post, index) => (
                 <div key={index} className='DashPhoto'>
-                    <img src={config.baseURL + "/files/photos/" + post.photo.path} alt="" className="ImagePost" />
+                    <img src={config.baseURL + "/files/photos/" + post.photo.path} alt="img" className="ImagePost" />
                     <span>{post.description}</span>
                 </div>
             ))}

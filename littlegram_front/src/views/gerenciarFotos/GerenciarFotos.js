@@ -1,59 +1,21 @@
 import './GerenciarFotos.css';
+import { ProgressBar, Modal } from 'react-bootstrap';
 
-import axios from 'axios';
-import config from '../../config'
 import Trash from '../../assets/imgs/trash.svg'
+import config from '../../config.js';
 import Search from '../../assets/imgs/search.svg'
 import Menu from '../../components/menu/Menu.js'
 import { useState, useEffect } from 'react';
-import { checkImageSize } from '../validators'
-import Modal from 'react-bootstrap/Modal';
-import ProgressBar from 'react-bootstrap/ProgressBar';
+import Validators from '../Validators';
+import Blank from './../../assets/imgs/404 error lost in space-amico.svg'
 
-import Toast from 'react-bootstrap/Toast';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import { useNavigate } from 'react-router-dom';
-const instance = axios.create({
-  baseURL: config.baseURL,
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-  }
-});
+import instance from '../api.js'
+import ModalYesNo from '../../components/ModalYesNo/ModalYesNo.js';
+import utilities from '../utilities.js';
+import ToastError from '../../components/ToastError/ToastError.js';
 
-function bytesToMegabytes(bytes) {
-  const megabytes = bytes / (1024 * 1024);
-  return megabytes.toFixed(2);
-}
-
-function data(date) {
-  const dateObject = new Date(date);
-
-  const year = dateObject.getFullYear();
-  //const nameMonth = date.toLocaleString('default', { month: 'long' });
-  const month = dateObject.getMonth();
-  const day = dateObject.getDate();
-  const hours = dateObject.getHours();
-  const minutes = dateObject.getMinutes();
-  const meses = [
-    'janeiro',
-    'fevereiro',
-    'março',
-    'abril',
-    'maio',
-    'junho',
-    'julho',
-    'agosto',
-    'setembro',
-    'outubro',
-    'novembro',
-    'dezembro',
-  ];
-  return `${day} de ${meses[month]} de ${year} às ${hours}:${minutes}`
-}
 
 function GerenciarFotos() {
-  const navigate = useNavigate()
   const [isFetchingPhotos, setIsFetchingPhotos] = useState(false);
   // Controlar upload
   const [progress, setProgress] = useState(0)
@@ -101,7 +63,7 @@ function GerenciarFotos() {
       }
       setProgress(25)
 
-      axios.post(config.baseURL + '/photos/multiples', form, {
+      instance.post(config.baseURL + '/photos/multiples', form, {
         onUploadProgress: function (progressEvent) {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
@@ -114,7 +76,8 @@ function GerenciarFotos() {
         if (response.status === 200) {
           handleModal();
           setImage([]);
-          navigate(0)
+          setOffSetPhotos(0)
+          getPhotos()
         }
       }).catch((error) => {
         if (error.response) {
@@ -135,48 +98,35 @@ function GerenciarFotos() {
 
   };
 
-  const delet = (path, photoId) => {
+  const deleteImage = (path, photoId) => {
 
-    axios.delete(config.baseURL + "/photos?path=" + path + "&photoId=" + photoId, {
+    instance.delete(config.baseURL + "/photos?path=" + path + "&photoId=" + photoId, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
       }
     }
     ).then((response) => {
-
+      console.log(response)
       if (response.status === 200) {
-        // handleDelete()
-        // uploadPhotos()
-        navigate(0)
+        setPhotos(photos.filter(elem => {
+          return elem.path !== path
+        }))
+        setOpenDelete(false)
       }
 
-    })
-  }
-  const uploadPhotos = () => {
-    instance.get('/photos/user/').then((response) => {
-
-      for (const key in response.data) {
-        response.data[key].size = bytesToMegabytes(response.data[key].size)
-      }
-
-      setPhotos(response.data)
-    }).catch((response) => {
-      if (response['response']['data']['message'] === "No photos found for this user.") {
-        setPhotos([])
-      }
     })
   }
 
   const getPhotos = () => {
     setIsFetchingPhotos(true);
-    axios.get(config.baseURL + "/photos/user/?limit=10&offset=" + offSetPhotos, {
+    instance.get(config.baseURL + "/photos/user/?limit=10&offset=" + offSetPhotos, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
     }).then((response) => {
       for (const key in response.data.photos) {
-        response.data.photos[key].size = bytesToMegabytes(response.data.photos[key].size)
+        response.data.photos[key].size = utilities.bytesToMegabytes(response.data.photos[key].size)
       }
 
       setPhotos(photos.concat(response.data.photos));
@@ -207,15 +157,15 @@ function GerenciarFotos() {
     <div className="Container">
       <Menu />
       <div className='PostFotos'>
-        <div style={{ width: '100%', padding: 15, textAlign: 'center' }}><button onClick={handleModal} className='ButtonPhoto'>Adicionar Foto</button></div>
+        <div className='BtnAdd'><button onClick={handleModal} className='ButtonPhoto'>Nova Foto</button></div>
 
         <div className='ListViews' onScroll={handleScrollPhotos} >
-          {photos !== undefined && photos.map((photo, index) => (
+          {photos.length > 0 ? photos.map((photo, index) => (
             <div key={index} className='DashPhoto'>
-              <img src={config.baseURL + "/files/photos/" + photo.path} alt="" className="Image" />
+              <img src={config.baseURL + "/files/photos/" + photo.path} alt="img" className="Image" />
               <div className='CellPhoto'>
                 <div className='DataPhoto'>
-                  <h5 style={{ color: 'white', fontSize: '17px', }}>data: {data(photo.createdAt)}</h5>
+                  <h5 style={{ color: 'white', fontSize: '17px', }}>data: {utilities.returnDate(photo.createdAt)}</h5>
                 </div>
                 <div className='DataPhoto'>
                   <h5 style={{ color: 'white', fontSize: '17px', }}>tamanho: {photo.size} mb</h5>
@@ -229,70 +179,28 @@ function GerenciarFotos() {
                 }}>deletar</button>
               </div>
             </div>
-          ))}
+          )) : <div className='BlankData'><img style={{ maxWidth: 500 }} alt="nada" src={Blank} /> <h4 style={{ color: 'white', marginTop: 10 }}>Ops... sem imagens adicionadas, adicione uma nova foto</h4> </div>
+
+          }
         </div>
-
-
-
       </div>
 
       <div style={{ display: progress > 0 ? 'flex' : 'none', zIndex: 100000000 }} className='TelaDeProgresso'>
         <ProgressBar className='BarraProgresso' now={progress} label={`${progress}%`} />
       </div>
 
-      {/* toasts */}
-      <ToastContainer
-        className="p-3"
-        position={'bottom-end'}
-        style={{ zIndex: 10000 }}>
-        <Toast
-          onClose={() => setErroSize(false)} show={openErroPhotoSize} delay={3000} autohide
-        >
-          <Toast.Header style={{ background: '#ff6347', color: 'white' }} closeButton={false}>
-            <strong className="me-auto">Error</strong>
-            <small>agora</small>
-          </Toast.Header>
-          <Toast.Body style={{ background: '#ff6347', color: 'white' }}>Imagem acima de 10 megabytes.</Toast.Body>
-        </Toast>
-      </ToastContainer>
-
-      <ToastContainer
-        className="p-3"
-        position={'bottom-end'}
-        style={{ zIndex: 10000 }}>
-        <Toast
-          onClose={() => setOpenErroFileType(false)} show={openErroFileType} delay={3000} autohide
-        >
-          <Toast.Header style={{ background: '#ff6347', color: 'white' }} closeButton={false}>
-            <strong className="me-auto">Error</strong>
-            <small>agora</small>
-          </Toast.Header>
-          <Toast.Body style={{ background: '#ff6347', color: 'white' }}>O arquivo não é suportado.</Toast.Body>
-        </Toast>
-      </ToastContainer>
-
-      <ToastContainer
-        className="p-3"
-        position={'bottom-end'}
-        style={{ zIndex: 10000 }}>
-        <Toast
-          onClose={() => setOpenFileRequiredError(false)} show={openFileRequiredError} delay={3000} autohide
-        >
-          <Toast.Header style={{ background: '#ff6347', color: 'white' }} closeButton={false}>
-            <strong className="me-auto">Error</strong>
-            <small>agora</small>
-          </Toast.Header>
-          <Toast.Body style={{ background: '#ff6347', color: 'white' }}>A seleção do arquivo é obrigatória.</Toast.Body>
-        </Toast>
-      </ToastContainer>
-
+      {/* Toasts */}
+      <ToastError show={openErroPhotoSize} setShow={setErroSize} text="Imagem acima de 10 megabytes." />
+      <ToastError show={openErroFileType} setShow={setOpenErroFileType} text="O arquivo não é suportado." />
+      <ToastError show={openFileRequiredError} setShow={setOpenFileRequiredError} text="A seleção do arquivo é obrigatória." />
+      {/* Modais */}
       <Modal show={openDelete} onHide={handleDelete} >
         <Modal.Body style={{ backgroundColor: 'var(--color3)' }}>
           <h1 style={{
             color: 'white', fontSize: '25px', width: '510px', marginBottom: '5px',
           }}>Deseja mesmo excluir permanentemente essa foto?</h1>
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: '20px' }}>
-            <button className='ButtonModal' onClick={() => { delet(selectedExclude.path, selectedExclude.photoId) }}>Sim</button>
+            <button className='ButtonModal' onClick={() => { deleteImage(selectedExclude.path, selectedExclude.photoId) }}>Sim</button>
             <button className='ButtonModal' onClick={handleDelete}>Não</button>
           </div>
         </Modal.Body>
@@ -303,7 +211,7 @@ function GerenciarFotos() {
           <h1 style={{ color: 'white', width: '100%', fontWeight: 500, textAlign: 'left' }}>Upload de Imagem</h1>
           <div style={image.length > 0 ? { display: 'flex', flexDirection: 'row', overflow: 'auto' } : {}}>
             {
-              image.length <= 0 ? <><img src={Search} /> <h1 style={{ color: 'white', fontSize: '18px', width: '100%', marginBottom: '5px', fontWeight: 400, textAlign: 'center' }}>Procure por uma imagem</h1></> : image.map((element, index) => { return (<img alt={index} key={index} src={element.file} style={{ width: 'auto', height: 350, margin: 'auto 15px' }} accept='image/*' />) })
+              image.length <= 0 ? <><img alt="search" src={Search} /> <h1 style={{ color: 'white', fontSize: '18px', width: '100%', marginBottom: '5px', fontWeight: 400, textAlign: 'center' }}>Procure por uma imagem</h1></> : image.map((element, index) => { return (<img alt={index} key={index} src={element.file} style={{ width: 'auto', height: 350, margin: 'auto 15px' }} accept='image/*' />) })
             }
           </div>
 
@@ -329,7 +237,7 @@ function GerenciarFotos() {
                     setOpenErroFileType(true)
                     return;
                   }
-                  if (checkImageSize()) {
+                  if (Validators.checkImageSize()) {
                     array.push({
                       fileReal: event.target.files[key],
                       file: URL.createObjectURL(event.target.files[key])
@@ -348,20 +256,8 @@ function GerenciarFotos() {
           </div>
         </Modal.Body>
       </Modal>
-      <Modal show={openDelete} onHide={handleDelete} >
-        <Modal.Body style={{ backgroundColor: 'var(--color3)' }}>
-          <h1 style={{ color: 'white', width: '100%', fontWeight: 500, textAlign: 'left' }}>Deletar Imagem</h1>
+      <ModalYesNo setShow={setOpenDelete} image={Trash} confirmFunction={() => { deleteImage(selectedExclude.path, selectedExclude.photoId) }} show={openDelete} onHide={handleDelete} title="Deletar Imagem" subtitle="Deseja mesmo excluir permanentemente essa foto?" />
 
-          <img src={Trash} style={{ width: '85%', margin: '0px auto', textAlign: 'center' }} />
-          <h1 style={{
-            width: '100%', color: 'white', fontSize: '25px', width: '100%', marginBottom: '5px',
-          }}>Deseja mesmo excluir permanentemente essa foto?</h1>
-          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: '20px' }}>
-            <button className='ButtonModal' onClick={() => { delet(selectedExclude.path, selectedExclude.photoId) }}>Sim</button>
-            <button className='ButtonModal' onClick={handleDelete}>Não</button>
-          </div>
-        </Modal.Body>
-      </Modal>
     </div>
   );
 }
