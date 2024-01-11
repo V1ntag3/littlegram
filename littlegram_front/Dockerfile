@@ -15,7 +15,5 @@ ENV NODE_ENV production
 RUN npm ci --only=production
 
 COPY --chown=node:node . ./
-
 EXPOSE 3000
-
 CMD ["npm start"]
