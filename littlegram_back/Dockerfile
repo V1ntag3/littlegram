@@ -7,9 +7,14 @@ WORKDIR /usr/app
 
 COPY package*.json ./
 
+
+
+RUN npm config set registry https://registry.npmjs.org/
+
 RUN npm link typescript
 RUN npm install npm@latest
 RUN npm install
+RUN npm install  --registry http://registry.npmjs.org/
 
 
 COPY --chown=node:node . ./
