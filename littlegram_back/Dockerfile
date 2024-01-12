@@ -1,7 +1,14 @@
 # install node
 FROM node:21-alpine
 
+
+RUN mkdir -p /usr/app/images
+RUN mkdir -p /usr/app/images/uploads
+RUN mkdir -p /usr/app/images/uploads/avatar
+RUN mkdir -p /usr/app/images/uploads/photos
+
 RUN mkdir -p /usr/app/node_modules && chown -R node:node /usr/app
+
 
 WORKDIR /usr/app
 
