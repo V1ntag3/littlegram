@@ -342,7 +342,7 @@ function DashBoard() {
                 setSelectedImage(index)
                 setOpenNewPost(false)
                 setOpenFilter(true)
-              }} className='PhotoToPost' style={{ background: utilities.returnBackgroundImages(config.baseURL + "/files/photos/" + photo.path) }}>
+              }} className='PhotoToPost' style={{ background: utilities.returnBackgroundImages(config.baseURL + "/files/photos/" + photo.path,"teste") }}>
               </div>
             )) : <><img style={{ maxWidth: 500 }} alt="nada" src={Blank} /> <h4 style={{ color: 'white', marginTop: 10 }}>Ops... Parece que não tem nada aqui, adicione uma foto para poder postar</h4> </>}
           </div>

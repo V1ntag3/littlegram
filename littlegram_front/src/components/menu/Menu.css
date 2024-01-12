@@ -120,6 +120,7 @@
         color: white;
         font-size: 1rem;
         font-weight: 400;
+        z-index: 10000;
     }
 
     .Menu {

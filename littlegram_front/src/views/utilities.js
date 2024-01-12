@@ -1,9 +1,9 @@
 const utilities = {
 
     returnBackgroundImages(url) {
-        var part1 = "url("
+        var part1 = "url('"
         var part2 = url
-        var part3 = ")  center/cover"
+        var part3 = "') center/cover"
         return part1 + part2 + part3
       },
     returnDate(date){
