@@ -24,9 +24,9 @@ export class UsersController {
 
     const createUserService = container.resolve(CreateUserService);
     const authenticateUserService = container.resolve(AuthenticateUserService);
-    const sendEmailVerificationService = container.resolve(
-      SendEmailVerificationService,
-    );
+    // const sendEmailVerificationService = container.resolve(
+    //   SendEmailVerificationService,
+    // );
 
     const user = await createUserService.execute({
       realName,
@@ -44,10 +44,10 @@ export class UsersController {
       password,
     });
 
-    sendEmailVerificationService.execute({
-      token,
-      user,
-    });
+    // sendEmailVerificationService.execute({
+    //   token,
+    //   user,
+    // });
 
     return response.status(200).json({ user: instanceToInstance(user), token });
   }
