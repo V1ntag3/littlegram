@@ -12,7 +12,7 @@ services:
       - app-network
   webserver:
     image: nginx:mainline-alpine
-    container_name: webserver
+    container_name: webserver-littlegram-back
     restart: unless-stopped
     ports:
       - "3001:80"

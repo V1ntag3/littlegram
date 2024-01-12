@@ -1,5 +1,5 @@
 var config = {
-  baseURL: 'http://217.196.60.248/:3001',
+  baseURL: 'http://217.196.60.248:3001/',
   filtros: [
     {
       name: 'normal',
