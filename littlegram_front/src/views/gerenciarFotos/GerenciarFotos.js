@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import Validators from '../Validators';
 import Blank from './../../assets/imgs/404 error lost in space-amico.svg'
 
-import instance from '../api.js'
+import instance from '../../api.js'
 import ModalYesNo from '../../components/ModalYesNo/ModalYesNo.js';
 import utilities from '../utilities.js';
 import ToastError from '../../components/ToastError/ToastError.js';

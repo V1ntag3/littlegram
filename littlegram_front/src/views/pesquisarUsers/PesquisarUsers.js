@@ -3,10 +3,9 @@ import './PesquisarUsers.css';
 import { useEffect, useState } from 'react'
 import Menu from '../../components/menu/Menu.js'
 import config from '../../config';
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import Lupa from '../../assets/imgs/lupa.svg'
-import instance from '../../views/api.js'
+import instance from '../../api.js'
 
 function PesquisarUsers() {
   // Controladores da requisição

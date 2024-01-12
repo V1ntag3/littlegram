@@ -13,7 +13,7 @@ import likeImg from '../../assets/imgs/like.svg'
 import fullLikeImg from '../../assets/imgs/fullLike.svg'
 import X from '../../assets/imgs/x.svg'
 import lixo from '../../assets/imgs/lixo.svg'
-import instance from '../../views/api.js'
+import instance from '../../api.js'
 
 function Profile() {
   const { id } = useParams();

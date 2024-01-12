@@ -2,10 +2,8 @@ import './Register.css';
 import RegisterSVG from "../../assets/imgs/register.svg"
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import config from '../../config'
 import Validators from '../Validators';
-import instance from '../api';
+import instance from '../../api';
 
 function Register() {
   const navigate = useNavigate();

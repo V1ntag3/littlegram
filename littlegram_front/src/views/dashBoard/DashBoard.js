@@ -15,7 +15,7 @@ import X from '../../assets/imgs/x.svg'
 import lixo from '../../assets/imgs/lixo.svg'
 import ModalYesNo from '../../components/ModalYesNo/ModalYesNo.js';
 import Blank from './../../assets/imgs/404 error lost in space-amico.svg'
-import instance from '../api.js';
+import instance from '../../api.js';
 import utilities from '../utilities.js';
 import Validators from '../Validators.js';
 function DashBoard() {

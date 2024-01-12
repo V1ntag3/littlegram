@@ -3,7 +3,7 @@ import './VerificandoEmail.css';
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
-import instance from '../api'
+import instance from '../../api'
 
 function VerificandoEmail() {
   const { email, token } = useParams();

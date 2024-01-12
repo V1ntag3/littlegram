@@ -1,6 +1,6 @@
 import config from '../../config.js'
 import { useEffect, useState } from 'react';
-import instance from '../../views/api.js'
+import instance from '../../api.js'
 function Posts({ postsData, activeScroll = true }) {
 
     const [posts, setPost] = useState([]);
