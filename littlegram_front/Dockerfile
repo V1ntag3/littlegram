@@ -1,5 +1,5 @@
 # Usar uma imagem específica do Node.js (21-alpine neste caso)
-FROM node:21-alpine
+FROM node:18-alpine
 
 # Mudar para o usuário root temporariamente para realizar algumas operações
 USER root
