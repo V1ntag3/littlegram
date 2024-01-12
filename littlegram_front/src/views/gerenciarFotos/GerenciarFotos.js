@@ -63,7 +63,7 @@ function GerenciarFotos() {
       }
       setProgress(25)
 
-      instance.post(config.baseURL + '/photos/multiples', form, {
+      instance.post('/photos/multiples', form, {
         onUploadProgress: function (progressEvent) {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
@@ -100,7 +100,7 @@ function GerenciarFotos() {
 
   const deleteImage = (path, photoId) => {
 
-    instance.delete(config.baseURL + "/photos?path=" + path + "&photoId=" + photoId, {
+    instance.delete("/photos?path=" + path + "&photoId=" + photoId, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -120,7 +120,7 @@ function GerenciarFotos() {
 
   const getPhotos = () => {
     setIsFetchingPhotos(true);
-    instance.get(config.baseURL + "/photos/user/?limit=10&offset=" + offSetPhotos, {
+    instance.get("/photos/user/?limit=10&offset=" + offSetPhotos, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }

@@ -62,7 +62,7 @@ function DashBoard() {
 
   function getPosts() {
     setIsFetchingPosts(true);
-    instance.get(config.baseURL + "/posts/?limit=10&offset=" + offSetPosts, {
+    instance.get("/posts/?limit=10&offset=" + offSetPosts, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -84,7 +84,7 @@ function DashBoard() {
 
   const getPhotos = () => {
     setIsFetchingPhotos(true);
-    instance.get(config.baseURL + "/photos/user/?limit=10&offset=" + offSetPhotos, {
+    instance.get("/photos/user/?limit=10&offset=" + offSetPhotos, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -109,7 +109,7 @@ function DashBoard() {
   }
 
   const uploadPost = () => {
-    instance.post(config.baseURL + "/posts/", {
+    instance.post("/posts/", {
       photoId: photos[selectedImage].id,
       description: descricao,
       filterUsed: String(selectedFilter)
@@ -126,7 +126,7 @@ function DashBoard() {
   }
 
   const createLike = (postId, likeV) => {
-    instance.post(config.baseURL + "/posts-evaluations/", {
+    instance.post("/posts-evaluations/", {
       isLike: likeV,
       postId: postId
     }, {
@@ -142,7 +142,7 @@ function DashBoard() {
   }
 
   const createCommentLike = (Id, likeV) => {
-    instance.post(config.baseURL + "/comments-evaluations/", {
+    instance.post("/comments-evaluations/", {
       isLike: likeV,
       commentId: Id
     }, {
@@ -158,7 +158,7 @@ function DashBoard() {
   }
 
   const createComment = (postId, comment) => {
-    instance.post(config.baseURL + "/comments/", {
+    instance.post("/comments/", {
       text: comment,
       postId: postId
     }, {
@@ -174,7 +174,7 @@ function DashBoard() {
 
   const getComments = (postId) => {
     setIsFetchingComments(true);
-    instance.get(config.baseURL + "/comments/post/" + postId + "?limit=10&offset=" + offsetComment, {
+    instance.get("/comments/post/" + postId + "?limit=10&offset=" + offsetComment, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -193,7 +193,7 @@ function DashBoard() {
   const deleteComment = (postId, commentId) => {
     console.log(commentId)
     console.log(postId)
-    instance.delete(config.baseURL + "/comments/?postId=" + postId + "&commentId=" + commentId, {
+    instance.delete("/comments/?postId=" + postId + "&commentId=" + commentId, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -207,7 +207,7 @@ function DashBoard() {
   }
 
   const deleteAllComment = (postId) => {
-    instance.delete(config.baseURL + "/comments/post/?postId=" + postId, {
+    instance.delete("/comments/post/?postId=" + postId, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -240,7 +240,7 @@ function DashBoard() {
   }
 
   const deletePost = (postId) => {
-    instance.delete(config.baseURL + "/posts/?postId=" + postId, {
+    instance.delete("/posts/?postId=" + postId, {
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
       }
