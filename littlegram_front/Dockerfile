@@ -2,15 +2,15 @@ FROM node:21-alpine
 
 USER root
 
-RUN mkdir -p /home/node/app/node_modules && chown -R root:root /home/node/app
+RUN mkdir -p /apps/littlegram/node_modules && chown -R root:root /apps/littlegram
 
-WORKDIR /home/node/app
+WORKDIR /apps/littlegram
 
 COPY package*.json ./
 
 RUN npm install
 
-COPY --chown=node:node . .
+COPY --chown=root:root . .
 
 EXPOSE 3000
 
