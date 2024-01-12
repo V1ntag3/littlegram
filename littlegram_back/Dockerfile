@@ -11,11 +11,12 @@ RUN npm link typescript
 
 RUN npm install
 
-RUN npm run migration:run
 
 COPY --chown=node:node . ./
 
 EXPOSE 3333
+
+RUN npm run migration:run
 
 
 CMD ["npm","run","dev"]
