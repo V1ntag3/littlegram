@@ -1,15 +1,9 @@
 # install node
 FROM node:21-alpine
 
+RUN mkdir -p /usr/app/node_modules && chown -R node:node /usr/app
 
-#MAKE WORKING DIRECTORY AND LOGS DIRECTORY
-
-RUN mkdir -p /app/littlegram/node_modules && chown -R node:node /app/littlegram
-
-
-#INSTALL AND RUN NPM 
-
-WORKDIR /app/littlegram
+WORKDIR /usr/app
 
 COPY package*.json ./
 
@@ -19,4 +13,6 @@ RUN npm ci --only=production
 
 COPY --chown=node:node . ./
 
-CMD ["npm start"]
+EXPOSE 3333
+
+CMD ["npm","run","dev"]
