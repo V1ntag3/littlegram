@@ -11,7 +11,7 @@ RUN mkdir -p /apps/littlegram/node_modules && chown -R root:root /apps/littlegra
 WORKDIR /apps/littlegram
 
 # Copiar apenas os arquivos necessários para instalar as dependências
-COPY package*.json ./
+COPY package.json ./
 
 # Instalar as dependências do projeto
 RUN npm install
