@@ -6,6 +6,7 @@ import config from '../../config';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import Lupa from '../../assets/imgs/lupa.svg'
+import instance from '../../views/api.js'
 
 function PesquisarUsers() {
   // Controladores da requisição
@@ -22,7 +23,7 @@ function PesquisarUsers() {
 
   function getUsers() {
     setIsFetchingUsers(true);
-    axios.get(config.baseURL + "/users?limit=10&offset=", {
+    instance.get("/users?limit=10&offset=", {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }

@@ -13,6 +13,7 @@ import likeImg from '../../assets/imgs/like.svg'
 import fullLikeImg from '../../assets/imgs/fullLike.svg'
 import X from '../../assets/imgs/x.svg'
 import lixo from '../../assets/imgs/lixo.svg'
+import instance from '../../views/api.js'
 
 function Profile() {
   const { id } = useParams();
@@ -61,7 +62,7 @@ function Profile() {
 
   function getPosts() {
     setIsFetchingPosts(true);
-    axios.get(config.baseURL + "/posts/user/" + id + "?limit=10&offset=" + offSetPosts, {
+    instance.get("/posts/user/" + id + "?limit=10&offset=" + offSetPosts, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -87,7 +88,7 @@ function Profile() {
 
   const getPhotos = () => {
     setIsFetchingPhotos(true);
-    axios.get(config.baseURL + "/photos/user/?limit=10&offset=" + offSetPhotos, {
+    instance.get("/photos/user/?limit=10&offset=" + offSetPhotos, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -112,7 +113,7 @@ function Profile() {
   }
 
   const uploadPost = () => {
-    axios.post(config.baseURL + "/posts/", {
+    instance.post("/posts/", {
       photoId: photos[selectedImage].id,
       description: descricao,
       filterUsed: String(selectedFilter)
@@ -129,7 +130,7 @@ function Profile() {
   }
 
   const createLike = (postId, likeV) => {
-    axios.post(config.baseURL + "/posts-evaluations/", {
+    instance.post("/posts-evaluations/", {
       isLike: likeV,
       postId: postId
     }, {
@@ -145,7 +146,7 @@ function Profile() {
   }
 
   const createCommentLike = (Id, likeV) => {
-    axios.post(config.baseURL + "/comments-evaluations/", {
+    instance.post( "/comments-evaluations/", {
       isLike: likeV,
       commentId: Id
     }, {
@@ -161,7 +162,7 @@ function Profile() {
   }
 
   const createComment = (postId, comment) => {
-    axios.post(config.baseURL + "/comments/", {
+    instance.post("/comments/", {
       text: comment,
       postId: postId
     }, {
@@ -177,7 +178,7 @@ function Profile() {
 
   const getComments = (postId) => {
     setIsFetchingComments(true);
-    axios.get(config.baseURL + "/comments/post/" + postId + "?limit=10&offset=" + offsetComment, {
+    instance.get("/comments/post/" + postId + "?limit=10&offset=" + offsetComment, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -194,7 +195,7 @@ function Profile() {
   }
 
   const deleteComment = (postId, commentId) => {
-    axios.delete(config.baseURL + "/comments/?postId=" + postId + "&commentId=" + commentId, {
+    instance.delete("/comments/?postId=" + postId + "&commentId=" + commentId, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -210,7 +211,7 @@ function Profile() {
   }
 
   const deleteAllComment = (postId) => {
-    axios.delete(config.baseURL + "/comments/post/?postId=" + postId, {
+    instance.delete("/comments/post/?postId=" + postId, {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
@@ -243,7 +244,7 @@ function Profile() {
   }
 
   const deletePost = (postId) => {
-    axios.delete(config.baseURL + "/posts/?postId=" + postId, {
+    instance.delete("/posts/?postId=" + postId, {
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
       }

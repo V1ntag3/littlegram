@@ -1,7 +1,6 @@
-import axios from 'axios';
 import config from '../../config.js'
 import { useEffect, useState } from 'react';
-
+import instance from '../../views/api.js'
 function Posts({ postsData, activeScroll = true }) {
 
     const [posts, setPost] = useState([]);
@@ -13,7 +12,7 @@ function Posts({ postsData, activeScroll = true }) {
         if (event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight - 100 && !isFetching) {
             setIsFetching(() => true);
 
-            axios.get(config.baseURL + "/posts/user/?limit=20&page=" + page, {
+            instance.get("/posts/user/?limit=20&page=" + page, {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 }
