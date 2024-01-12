@@ -8,7 +8,7 @@ WORKDIR /usr/app
 COPY package*.json ./
 
 RUN npm link typescript
-
+RUN npm install npm@latest
 RUN npm install
 
 
