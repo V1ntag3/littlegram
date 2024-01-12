@@ -23,4 +23,4 @@ COPY --chown=root:root . .
 EXPOSE 3000
 
 # Comando padrão para iniciar a aplicação
-CMD [ "npm", "start" ]
+CMD [ "npm start" ]
