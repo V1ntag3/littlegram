@@ -56,7 +56,7 @@ function Register() {
 
           const form = new FormData();
           form.append('avatar', image.fileReal);
-          axios.patch(config.baseURL + '/users/avatar', form, {
+          instance.patch('/users/avatar', form, {
             headers: { 'Content-Type': 'multipart/form-data', Authorization: 'Bearer ' + response.data.token }
           }).then(() => {
             if (response.status === 200) {
