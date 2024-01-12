@@ -7,9 +7,9 @@ WORKDIR /usr/app
 
 COPY package*.json ./
 
-ENV NODE_ENV production
+RUN npm link typescript
 
-RUN npm ci --only=production
+RUN npm install
 
 COPY --chown=node:node . ./
 
