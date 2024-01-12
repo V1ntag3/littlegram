@@ -63,7 +63,7 @@ function GerenciarFotos() {
       }
       setProgress(25)
 
-      instance.post('/photos/multiples', form, {
+      instance.post('photos/multiples', form, {
         onUploadProgress: function (progressEvent) {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total

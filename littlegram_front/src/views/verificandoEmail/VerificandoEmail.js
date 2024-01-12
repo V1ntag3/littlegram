@@ -11,7 +11,7 @@ function VerificandoEmail() {
 
   useEffect(() => {
     setTimeout(() => {
-      instance.patch('/sessions/confirm-account/', {
+      instance.patch('sessions/confirm-account/', {
         email: email,
         token: token
       }).then((response) => {
